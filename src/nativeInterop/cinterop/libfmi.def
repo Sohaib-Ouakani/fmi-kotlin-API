@@ -1,0 +1,7 @@
+headers = fmilib.h
+
+headerFilter = FMI/* FMI1/* FMI2/* FMI3/*
+
+compilerOpts = -I/Users/sohaibouakani/Desktop/tirocinio/fmilib-compiled/install/include -DFMILIB_EXPORT=
+
+linkerOpts = -L/Users/sohaibouakani/Desktop/tirocinio/fmilib-compiled/install/lib -lfmilib_shared

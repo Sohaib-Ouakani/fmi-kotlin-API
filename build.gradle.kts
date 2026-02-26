@@ -24,7 +24,19 @@ kotlin {
     }
 
     nativeTarget.apply {
+        compilations.getByName("main") {
+            cinterops {
+                val libfmi by creating
+            }
+        }
         binaries {
+            all {
+                linkerOpts(
+                    "-L/Users/sohaibouakani/Desktop/tirocinio/fmilib-compiled/install/lib",
+                    "-lfmilib_shared",
+                    "-Wl,-rpath,/Users/sohaibouakani/Desktop/tirocinio/fmilib-compiled/install/lib"
+                )
+            }
             executable {
                 entryPoint = "main"
             }
