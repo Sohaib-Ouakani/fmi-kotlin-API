@@ -32,9 +32,9 @@ kotlin {
         binaries {
             all {
                 linkerOpts(
-                    "-L/Users/sohaibouakani/Desktop/tirocinio/fmilib-compiled/install/lib",
+                    "-L$rootDir/libs/fmilib/lib",
                     "-lfmilib_shared",
-                    "-Wl,-rpath,/Users/sohaibouakani/Desktop/tirocinio/fmilib-compiled/install/lib"
+                    "-Wl,-rpath,$rootDir/libs/fmilib/lib"
                 )
             }
             executable {
@@ -48,4 +48,8 @@ kotlin {
             implementation(libs.kotlinxSerializationJson)
         }
     }
+}
+
+tasks.withType<Exec> {
+    workingDir = projectDir
 }
