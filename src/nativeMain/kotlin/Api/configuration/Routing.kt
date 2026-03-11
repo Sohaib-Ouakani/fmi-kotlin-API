@@ -45,7 +45,10 @@ fun Application.configureRouting() {
                         "please initiate the fmu by making a get request to /init with fmu path and path to unpack it"
                     )
                 }
-                call.respond(fmu.fmuInfo)
+                val result = fmu.fmuInfo
+                fmu.close()
+
+                call.respond(result)
             }
         }
     }
