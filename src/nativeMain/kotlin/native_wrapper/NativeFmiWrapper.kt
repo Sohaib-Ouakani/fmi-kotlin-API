@@ -12,6 +12,8 @@ import libfmi.*
 import native_wrapper.fmu_data.info.FmuInfo
 import native_wrapper.simulation.config.SimulationConfig
 import native_wrapper.simulation.results.SimulationResult
+import platform.posix.`false`
+import platform.posix.`true`
 
 enum class DLL_STATUS {
     OK, ERROR
@@ -40,11 +42,12 @@ class NativeFmiWrapper(val path: String, val resources: String) : AutoCloseable 
     }
 
     private fun getInfo(): FmuInfo {
-        val kind = when(fmi2_import_get_fmu_kind(fmi).toInt()) {
-            1 -> "Model Exchange"
-            2 -> "Co-Simulation"
-            3 -> "Model Exchange and Co-Simulation"
-            else -> "Unknown"
+        val kind = when(fmi2_import_get_fmu_kind(fmi)) {
+            fmi2_fmu_kind_me -> "Model Exchange"
+            fmi2_fmu_kind_cs -> "Co-Simulation"
+            fmi2_fmu_kind_me_and_cs -> "Model Exchange and Co-Simulation"
+            fmi2_fmu_kind_unknown -> "Unknown"
+            else -> ""
         }
         val varList = fmi2_import_get_variable_list(fmi, 0)
         val varList_size = fmi2_import_get_variable_list_size(varList)
@@ -111,7 +114,7 @@ class NativeFmiWrapper(val path: String, val resources: String) : AutoCloseable 
             experimentName,
             fmi2_type_t.fmi2_cosimulation,
             null,
-            fmi2_false.toInt()
+            `false`
         )
     }
 
@@ -122,10 +125,10 @@ class NativeFmiWrapper(val path: String, val resources: String) : AutoCloseable 
 
         fmi2_import_setup_experiment(
             fmi,
-            if (config.tolerance != null) fmi2_true.toInt() else fmi2_false.toInt(),
+            if (config.tolerance != null) `true` else `false`,
             config.tolerance ?: 0.0,
             config.startTime,
-            if (config.stopTime != null) fmi2_true.toInt() else fmi2_false.toInt(),
+            if (config.stopTime != null) `true` else `false`,
             config.stopTime ?: 0.0
         )
 
@@ -177,7 +180,7 @@ class NativeFmiWrapper(val path: String, val resources: String) : AutoCloseable 
                     fmi,
                     time,
                     step,
-                    fmi2_true.toInt()
+                    `true`
                 )
 
                 fmi2_import_get_real(
