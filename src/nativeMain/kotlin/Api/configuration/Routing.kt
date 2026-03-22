@@ -8,6 +8,7 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.usePinned
 import model.fmu.Fmu
+import platform.posix.getcwd
 
 const val FMU_PATH = "./resources/BouncingBall.fmu"
 
@@ -15,7 +16,7 @@ const val FMU_PATH = "./resources/BouncingBall.fmu"
 fun getResourcesPath(): String {
     val buffer = ByteArray(4096)
     val cwd = buffer.usePinned {
-        platform.posix.getcwd(it.addressOf(0), 4096.toULong())?.toKString() ?: "."
+        getcwd(it.addressOf(0), 4096.toULong())?.toKString() ?: "."
     }
     return "$cwd/resources"
 }

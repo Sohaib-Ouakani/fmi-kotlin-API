@@ -13,10 +13,11 @@ import model.fmu.Fmu
 import platform.posix.`false`
 import platform.posix.getcwd
 import platform.posix.`true`
+import utility.FmuRecompiler
 import kotlin.math.round
 
 
-const val FMU_PATH = "./resources/BouncingBall.fmu"
+const val FMU_PATH = "./resources/result.fmu"
 
 @OptIn(ExperimentalForeignApi::class)
 fun getWorkingDir(): String {
@@ -30,6 +31,9 @@ fun getWorkingDir(): String {
 @OptIn(ExperimentalForeignApi::class)
 fun main() {
     memScoped {
+//        recompileFMU("./resources/BouncingBall.fmu", FMU_PATH)
+        val recompiler = FmuRecompiler()
+        recompiler.recompile("./resources/BouncingBall.fmu", FMU_PATH)
         val workDir = getWorkingDir()
         val resources = "$workDir/resources"
 
@@ -41,6 +45,8 @@ fun main() {
         )
         if (version == fmi_version_2_0_enu) {
             println("yeeeeeee")
+        } else {
+            throw IllegalArgumentException("fmi version $version is not supported. expected version: FMI 2.0")
         }
         val characteristics: MutableMap<String, String?> = mutableMapOf()
 
